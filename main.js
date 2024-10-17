@@ -1,0 +1,42 @@
+//funcion para cargar el inventario desde localStorage
+function loadInventory() {
+  let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+  let inventoryList = document.getElementById("inventoryList");
+  inventoryList.innerHTML = ""; //evita que se los items agregados anteriormente se vuelvan a repetir al ingresar un nuevo item
+
+  inventory.forEach((item) => {
+    let li = document.createElement("li");
+    li.textContent = `Number: ${item.number}, Name: ${item.name}`;
+    inventoryList.appendChild(li);
+  });
+}
+
+//funcion para agregar un item al inventario
+function addItem() {
+  let itemNumber = document.getElementById("itemNumber").value;
+  let itemName = document.getElementById("itemName").value;
+  let messageDiv = document.getElementById("message");
+
+  //validacion de entrada
+  if (!itemNumber || !itemName) {
+    messageDive.textContent = "Please, complete both boxes";
+    return;
+  }
+
+  let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+  inventory.push({ number: itemNumber, name: itemName });
+  localStorage.setItem("inventory", JSON.stringify(inventory));
+
+  messageDiv.textContent = "Item added successfully.";
+  loadInventory();
+
+  //limpiar las cajas
+  document.getElementById("itemNumber").value = "";
+  document.getElementById("itemName").value = "";
+}
+
+//evento para el boton
+document.getElementById("addItemButton").addEventListener("click", addItem);
+
+//cargar el inventario al iniciar la pagina
+loadInventory();
